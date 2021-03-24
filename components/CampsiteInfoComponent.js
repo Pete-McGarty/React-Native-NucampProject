@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Modal, Button, StyleSheet, Alert, PanResponder} from 'react-native';
+import {Text, View, Modal, Button, StyleSheet, Alert, PanResponder, Share} from 'react-native';
 import {Card, Icon, Rating, Input} from 'react-native-elements';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
@@ -21,6 +21,16 @@ const mapDispatchToProps = {
     postFavorite: campsiteId => (postFavorite(campsiteId)),
     postComment
 };
+
+const shareCampsite = (title, message, url) => {
+    Share.share({
+        title: title,
+        message: `${title}: ${message} ${url}`,
+        url: url
+    },{
+        dialogTitle: 'Share' + title
+    })
+}
 
 function RenderCampsite(props) {
     const {campsite} = props;
@@ -65,6 +75,16 @@ function RenderCampsite(props) {
         }
     })
 
+    const shareCampsite = (title, message, url) => {
+        Share.share({
+            title: title,
+            message: `${title}: ${message} ${url}`,
+            url: url
+        },{
+            dialogTitle: 'Share ' + title
+        })
+    }
+
     if (campsite) {
         return (
             <Animatable.View 
@@ -92,12 +112,21 @@ function RenderCampsite(props) {
                                     alert('Already set to favorite') : props.markFavorite()}
                             />
                             <Icon
-                                name='pencil'
+                                name={'pencil'}
                                 type='font-awesome'
                                 color="#5637dd"
                                 raised
                                 reverse
                                 onPress={() => props.onShowModal()}
+                            />
+                            <Icon
+                                name={'share'}
+                                type='font-awesome'
+                                color="#5637dd"
+                                raised
+                                reverse
+                                onPress={() => shareCampsite(campsite.name, campsite.description, 
+                                    baseUrl + campsite.image)}
                             />
                         </View>
                 </Card>   
